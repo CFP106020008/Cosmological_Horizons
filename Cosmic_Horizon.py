@@ -1,3 +1,22 @@
+#====================#
+
+# This code is made by Lin Yen-Hsing (NTHU, 2017-2021) to demonstate
+# the difference between three commonly mis-understood concepts in
+# cosmoloy, namely the "Particle horizon", the "Event horizon" and 
+# the "Hubble radius".
+
+# This code is mainly based on 
+# https://physics.stackexchange.com/questions/70339/a-cosmological-horizon-at-the-hubble-radius
+# which provides a clear and short description on this topic.
+# Of course, these concepts should be found in any cosmology textbook.
+
+# If you have any question, feel free to contact me with
+# julius52700@gapp.nthu.edu.tw
+
+#====================#
+
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
