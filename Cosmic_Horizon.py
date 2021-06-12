@@ -20,27 +20,26 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
 # Fundamental Constants
-c = 299792458 # m/s
-Mpc2m = 3.08567758e22 # m
-Gly2m = 9.4605e24 # m
-yr2s = 31556926 # s
-rho_c = 7.64e-10 # J/m^3
-H0 = 67.3e3/Mpc2m # Hubble Constant at a=1
-Omega_M = 0.315 # Mass density
-Omega_L = 0.685 # Dark energy density
-Omega_R = 4.17e-14/rho_c # Radiation density
+c = 299792458           # m/s
+Mpc2m = 3.08567758e22   # m
+Gly2m = 9.4605e24       # m
+yr2s = 31556926         # s
+rho_c = 7.64e-10        # J/m^3
+H0 = 67.3e3/Mpc2m       # Hubble Constant at a=1
+Omega_M = 0.315         # Mass density
+Omega_L = 0.685         # Dark energy density
+Omega_R = 4.17e-14/rho_c# Radiation density
 
+# Create figure
 fig, ax = plt.subplots()
-
-# Comoving distance
 
 class Photon:
 
     def __init__(self, 
-                 a_launch, # scale factor at emssion 
-                 amax, # scale factor at receiving 
-                 d_source, # The distance of the photon source in comoving distance
-                 ray_direction # +1 for travel outward, -1 for inward
+                 a_launch,      # scale factor at emssion 
+                 amax,          # scale factor at receiving 
+                 d_source,      # The distance of the photon source in comoving distance
+                 ray_direction  # +1 for travel outward, -1 for inward
                  ):
         Result = self.Dc(a_launch, amax, d_source, ray_direction)
         self.a_photon = Result[0]
@@ -52,21 +51,24 @@ class Photon:
         return
 
     def Dc(self,
-           a_launch, # The scale factor of when photon was launched
-           amax, # scale factor at receiving 
-           d_source, # The comoving distance of the photon source  
-           ray_direction, # +1 for travel outward, -1 for inward
-           amin=1e-30, # scale factor at emssion 
-           N = int(1e3) # Sample points
+           a_launch,        # The scale factor of when photon was launched
+           amax,            # scale factor at receiving 
+           d_source,        # The comoving distance of the photon source  
+           ray_direction,   # +1 for travel outward, -1 for inward
+           amin=1e-30,      # scale factor at emssion 
+           N = int(1e3)     # Sample points
            ):
         
         a_source = np.linspace(amin, amax, N)
         a_photon = np.linspace(a_launch, amax, N)
-        # The comoving distance photon travels
+       
+        # Hubble parameter evolve with scale factor
         def Hubble_Parameter(a):
+            # Assuming k = 0, standard LCDM cosmology
             return H0*np.sqrt(Omega_R*a**-4 + Omega_M*a**-3 + Omega_L*a**0)
         
-        def Cov_Dis(a, d): 
+        # The comoving distance photon travels
+        def Cov_Dis(a, d):
             H = Hubble_Parameter(a) # Hubble Parameter
             return c/(a**2*H)*ray_direction
         
@@ -75,17 +77,21 @@ class Photon:
             H = Hubble_Parameter(a) # Hubble Parameter
             return 1/(a*H)
         
-        photon = solve_ivp( fun=Cov_Dis, 
-                            t_span=(a_launch, amax),
-                            t_eval=a_photon,
-                            y0=[d_source])
+        # Path of photon
+        photon = solve_ivp(     fun=Cov_Dis, 
+                                t_span=(a_launch, amax),
+                                t_eval=a_photon,
+                                y0=[d_source])
         
+        # Relation between a and t
         # To avoid a=0 at the beginning of the universe, 
         # we start from current universe to work out t(a)
-        tmin = solve_ivp(   fun=cosmic_time, 
-                            t_span=(1, amin),
-                            y0=[138e8*yr2s]).y[0][-1]
-        
+        tmin = solve_ivp(       fun=cosmic_time, 
+                                t_span=(1, amin),
+                                y0=[138e8*yr2s]).y[0][-1]
+
+        # Note: We are using 13.8 Gyr as the age of the universe
+        # This is cosmological parameter dependent!
         t_launch = solve_ivp(   fun=cosmic_time, 
                                 t_span=(1, a_launch),
                                 y0=[138e8*yr2s]).y[0][-1]
@@ -100,10 +106,9 @@ class Photon:
                                 t_eval=a_photon,
                                 y0=[t_launch])
 
-        
-        t_photon = photon_t.y[0]             # scale factor
+        t_photon = photon_t.y[0]        # scale factor
         d_photon = a_photon*photon.y[0] # Proper distance of photon in MKS
-        t_source = source_t.y[0]               # Cosmic time in s
+        t_source = source_t.y[0]        # Cosmic time in s
         d_source = a_source*d_source    # Proper distance of source in MKS
         return [a_photon, t_photon, d_photon, a_source, t_source, d_source]
 
@@ -123,12 +128,12 @@ ray4 = Photon(1, 10, 14.5*Gly2m, 1)
 ax.plot(ray4.d_source/Gly2m, ray4.t_source/yr2s/1e9, linestyle='dotted', color='cyan') # This is source galaxy
 
 ax.axhline(13.8, 0, 1, linestyle='dashed', color='gray', label='Now') # Current age of the universe
-ax.axvline(0, 0, 1,    linestyle='dashed', color='gray') # World line for observer
+ax.axvline(0,    0, 1, linestyle='dashed', color='gray')              # World line for observer
 ax.axvline(16.7, 0, 1, linestyle='dashed', color='r',    label='Event Horizon')
 ax.axvline(14.5, 0, 1, linestyle='dashed', color='cyan', label='Hubble Radius')
 ax.axvline(47,   0, 1, linestyle='dashed', color='b',    label='Particle Horizon')
 ax.set_xlim([0, 125])
-ax.set_ylim([0, 50])
+ax.set_ylim([0, 50 ])
 ax.set_xlabel('Proper Distance (Gly)')
 ax.set_ylabel('Cosmic Time (Gyr)')
 plt.legend()
