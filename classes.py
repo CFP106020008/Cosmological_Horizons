@@ -81,3 +81,18 @@ class Photon:
         t_source = source_t.y[0]        # Cosmic time in s
         d_source = a_source*d_source    # Proper distance of source in MKS
         return [a_photon, t_photon, d_photon, a_source, t_source, d_source]
+
+    
+def EventHorizon(amin=1e-30, amax=100):
+    #a = np.linspace(amin,amax,100)
+    a = np.logspace(np.log10(amin),np.log10(amax),int(5e2))
+    eh = []
+    t = []
+    for i in a:
+        ray = Photon(i, 1e5, 0, 1)
+        dc = ray.d_photon[-1]/ray.a_photon[-1]*i
+        eh.append(dc)
+        t.append(ray.t_photon[0])
+    return [np.array(t), np.array(eh)]
+
+        
