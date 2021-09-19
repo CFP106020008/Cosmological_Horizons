@@ -9,9 +9,9 @@ class Photon:
                  a_launch,      # scale factor at emssion 
                  amax,          # scale factor at receiving 
                  d_source,      # The distance of the photon source in comoving distance
-                 ray_direction  # +1 for travel outward, -1 for inward
-                 ):
-        Result = self.Dc(a_launch, amax, d_source, ray_direction)
+                 ray_direction, # +1 for travel outward, -1 for inward
+                 N = int(1e3)):
+        Result = self.Dc(a_launch, amax, d_source, ray_direction, N=N)
         self.a_photon = Result[0]
         self.t_photon = Result[1]
         self.d_photon = Result[2]
@@ -83,16 +83,4 @@ class Photon:
         return [a_photon, t_photon, d_photon, a_source, t_source, d_source]
 
     
-def EventHorizon(amin=1e-30, amax=100):
-    #a = np.linspace(amin,amax,100)
-    a = np.logspace(np.log10(amin),np.log10(amax),int(5e2))
-    eh = []
-    t = []
-    for i in a:
-        ray = Photon(i, 1e5, 0, 1)
-        dc = ray.d_photon[-1]/ray.a_photon[-1]*i
-        eh.append(dc)
-        t.append(ray.t_photon[0])
-    return [np.array(t), np.array(eh)]
 
-        
