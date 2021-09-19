@@ -4,6 +4,9 @@ from scipy.integrate import solve_ivp
 from constants import *
 from classes import *
 from functions import *
+import warnings
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+
 
 # Create figure
 plt.style.use('dark_background')
