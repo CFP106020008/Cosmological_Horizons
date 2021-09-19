@@ -49,17 +49,15 @@ def Plot_EventHorizon(fig, ax, amin=1e-50, amax=100, N=int(1e3)):
         return [np.array(t), np.array(eh)]
     t, eh = EventHorizon()
     '''
-    a = np.logspace(np.log10(amin),np.log10(amax),N)
     ray_EH = Photon(1, 1e5, 0, 1)
-    EH_t0 = ray_EH.d_photon[-1]
+    EH_t0 = ray_EH.d_photon[-1]/ray_EH.a_photon[-1]
     ray_PH = Photon(amin, 1, 0, 1)
     PH_t0 = ray_PH.d_photon[-1]
     ray    = Photon(amin, amax, 0, 1)
-    EH = (np.ones(N)*(EH_t0 + PH_t0) - ray.d_photon)*ray.a_photon
+    EH = (np.ones(N)*(EH_t0 + PH_t0) - ray.d_photon/ray.a_photon)*ray.a_photon
     t = ray.t_photon
-    ax.plot(EH/Gly2m, t/yr2s/1e9, color='r', linestyle='dashed', label='Event Horizon')
-    #ax.plot(eh/Gly2m, t/yr2s/1e9, color='r', linestyle='dashed', label='Event Horizon')
-    #ax.plot(-eh/Gly2m, t/yr2s/1e9, color='r', linestyle='dashed')
+    ax.plot(EH/Gly2m,  t/yr2s/1e9, color='r', linestyle='dashed', label='Event Horizon')
+    ax.plot(-EH/Gly2m, t/yr2s/1e9, color='r', linestyle='dashed')
     return 
 
 def Plot_ParticleHorizonDemo(fig, ax):

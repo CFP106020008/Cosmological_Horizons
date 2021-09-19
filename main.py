@@ -39,12 +39,10 @@ Plot_HubbleRadius(fig, ax)
 
 ax.set_xlim([-50, 50])
 ax.set_ylim([0, 30 ])
-#ax.set_xlim([10, 20])
-#ax.set_ylim([10, 40])
 
 ax.set_xlabel('Proper Distance (Gly)')
 ax.set_ylabel('Cosmic Time (Gyr)')
-#plt.legend()
+plt.legend()
 plt.tight_layout()
 fig.savefig('Particle_Horizon_2.png', dpi=300, transparent=True)
 plt.show()
