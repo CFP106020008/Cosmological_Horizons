@@ -14,15 +14,13 @@ fig, ax = plt.subplots(figsize=(5,5))
 #ax.xaxis.set_visible(False)
 #ax.yaxis.set_visible(False)
 plt.subplots_adjust(0.1,0.1,0.9,0.9,0,0)
-#ax.set_facecolor('#303030')
+ax.set_facecolor('#303030')
 
 # This is particle horizon demo
 Plot_ParticleHorizonDemo(fig, ax)
 
 # This is event horizon demo
 Plot_Multiple(fig, ax, Dcs=[14.5,16.7])
-
-# This is for hubble radius demo
 
 # This is for plotting light cone
 Plot_LightCone(fig, ax)
@@ -42,7 +40,7 @@ ax.set_ylim([0, 30 ])
 
 ax.set_xlabel('Proper Distance (Gly)')
 ax.set_ylabel('Cosmic Time (Gyr)')
-plt.legend()
+#plt.legend()
 plt.tight_layout()
 fig.savefig('Particle_Horizon_2.png', dpi=300, transparent=True)
 plt.show()

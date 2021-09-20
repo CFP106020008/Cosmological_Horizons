@@ -56,9 +56,9 @@ class Photon:
         # Relation between a and t
         # To avoid a=0 at the beginning of the universe, 
         # we start from current universe to work out t(a)
-        tmin = solve_ivp(       fun=cosmic_time, 
-                                t_span=(1, amin),
-                                y0=[138e8*yr2s]).y[0][-1]
+        #tmin = solve_ivp(       fun=cosmic_time, 
+        #                        t_span=(1, amin),
+        #                        y0=[138e8*yr2s]).y[0][-1]
 
         # Note: We are using 13.8 Gyr as the age of the universe
         # This is cosmological parameter dependent!
@@ -69,7 +69,7 @@ class Photon:
         source_t = solve_ivp(   fun=cosmic_time, 
                                 t_span=(amin, amax),
                                 t_eval=a_source,
-                                y0=[tmin])
+                                y0=[0])
         
         photon_t = solve_ivp(   fun=cosmic_time, 
                                 t_span=(a_launch, amax),

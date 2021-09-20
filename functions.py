@@ -19,13 +19,13 @@ def Plot_HubbleRadius(fig, ax, amin=1e-30, amax=100):
     def cosmic_time(a, t):
         H = Hubble_Parameter(a) # Hubble Parameter
         return 1/(a*H)
-    tmin = solve_ivp(       fun=cosmic_time, 
-                            t_span=(1, amin),
-                            y0=[138e8*yr2s]).y[0][-1]
+    #tmin = solve_ivp(       fun=cosmic_time, 
+    #                        t_span=(1, amin),
+    #                        y0=[138e8*yr2s]).y[0][-1]
     source_t = solve_ivp(   fun=cosmic_time, 
                             t_span=(amin, amax),
                             t_eval=a,
-                            y0=[tmin])
+                            y0=[0])
     t = np.array(source_t.y[0])
     
     # Plot the results
@@ -33,22 +33,8 @@ def Plot_HubbleRadius(fig, ax, amin=1e-30, amax=100):
     ax.plot(-d, t/yr2s/1e9, color='g', label='Hubble Radius')
     return 
 
-def Plot_EventHorizon(fig, ax, amin=1e-50, amax=100, N=int(1e3)):
+def Plot_EventHorizon(fig, ax, amin=1e-30, amax=100, N=int(1e3)):
     print('Plotting Event Horizon')
-    '''
-    def EventHorizon(amin=1e-30, amax=100):
-        #a = np.linspace(amin,amax,100)
-        a = np.logspace(np.log10(amin),np.log10(amax),N)
-        eh = []
-        t = []
-        for i in a:
-            ray = Photon(i, 1e5, 0, 1)
-            dc = ray.d_photon[-1]/ray.a_photon[-1]*i
-            eh.append(dc)
-            t.append(ray.t_photon[0])
-        return [np.array(t), np.array(eh)]
-    t, eh = EventHorizon()
-    '''
     ray_EH = Photon(1, 1e5, 0, 1)
     EH_t0 = ray_EH.d_photon[-1]/ray_EH.a_photon[-1]
     ray_PH = Photon(amin, 1, 0, 1)
