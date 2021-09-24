@@ -5,6 +5,7 @@ from constants import *
 from classes import *
 
 def Plot_HubbleRadius(fig, ax, amin=1e-30, amax=100):
+    print(Omega_L)
     print('Plotting Hubble Radius')
     a = np.logspace(np.log10(amin),np.log10(amax),int(1e3))
     
